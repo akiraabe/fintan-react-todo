@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { BackendService } from "../backend/BackendService";
 import "./TodoBoard.css";
-import { TodoFilter } from "./TodoFilter";
+import { FilterType, TodoFilter } from "./TodoFilter";
 import { TodoForm } from "./TodoForm";
 import { TodoList } from "./TodoList";
 
@@ -10,23 +11,46 @@ type Todo = {
   completed: boolean;
 };
 
+type ShowFilter = {
+  [K in FilterType]: (todo: Todo) => boolean
+};
+
+const showFilter: ShowFilter = {
+  ALL: (todo) => true,
+  INCOMPLETE: (todo) => !todo.completed,
+  COMPLETED: (todo) => todo.completed,
+};
+
 export const TodoBoard: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [filterType, setFilterType] = useState <FilterType>('ALL');
 
   useEffect(() => {
-    setTodos([
-      { id: 2001, text: "洗い物をする", completed: true },
-      { id: 2002, text: "洗濯物を干す", completed: false },
-      { id: 2003, text: "買い物へ行く", completed: false },
-      { id: 2004, text: "Fintanハンズオンやる", completed: false },
-    ]);
+    BackendService.getTodos().then((response) => setTodos(response));
   }, []);
+
+  const addTodo = (returnedTodo: Todo) => {
+    setTodos(todos.concat(returnedTodo));
+  };
+
+  const toggleTodoCompletion = (id: number) => {
+    const target = todos.find(todo => todo.id === id);
+    if (!target) {
+      return;
+    }
+    BackendService.putTodo(id, !target.completed)
+      .then(returnedTodo => setTodos(
+        todos.map(todo => todo.id === id ? returnedTodo : todo)
+      ));
+  };
+
+  const showTodos = todos.filter(showFilter[filterType]);
 
   return (
     <div className="TodoBoard_content">
-      <TodoForm />
-      <TodoFilter />
-      <TodoList todos={todos} />
+      <TodoForm addTodo={addTodo} />
+      <TodoFilter filterType={filterType} setFilterType={setFilterType}/>
+      <TodoList todos={showTodos} toggleTodoCompletion={toggleTodoCompletion} />
     </div>
   );
 };
