@@ -12,7 +12,7 @@ type Todo = {
 };
 
 type ShowFilter = {
-  [K in FilterType]: (todo: Todo) => boolean
+  [K in FilterType]: (todo: Todo) => boolean;
 };
 
 const showFilter: ShowFilter = {
@@ -23,7 +23,7 @@ const showFilter: ShowFilter = {
 
 export const TodoBoard: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [filterType, setFilterType] = useState <FilterType>('ALL');
+  const [filterType, setFilterType] = useState<FilterType>("ALL");
 
   useEffect(() => {
     BackendService.getTodos().then((response) => setTodos(response));
@@ -34,14 +34,24 @@ export const TodoBoard: React.FC = () => {
   };
 
   const toggleTodoCompletion = (id: number) => {
-    const target = todos.find(todo => todo.id === id);
+    const target = todos.find((todo) => todo.id === id);
     if (!target) {
       return;
     }
-    BackendService.putTodo(id, !target.completed)
-      .then(returnedTodo => setTodos(
-        todos.map(todo => todo.id === id ? returnedTodo : todo)
-      ));
+    BackendService.putTodo(id, !target.completed).then((returnedTodo) =>
+      setTodos(todos.map((todo) => (todo.id === id ? returnedTodo : todo)))
+    );
+  };
+
+  const deleteTodo = (id: number) => {
+    console.log('####deleteTodo')
+    const target = todos.find((todo) => todo.id === id);
+    if (!target) {
+      return;
+    }
+    BackendService.deleteTodo(id).then(() =>
+      setTodos(todos.filter((todo) => (todo.id !== id)))
+    );
   };
 
   const showTodos = todos.filter(showFilter[filterType]);
@@ -49,8 +59,12 @@ export const TodoBoard: React.FC = () => {
   return (
     <div className="TodoBoard_content">
       <TodoForm addTodo={addTodo} />
-      <TodoFilter filterType={filterType} setFilterType={setFilterType}/>
-      <TodoList todos={showTodos} toggleTodoCompletion={toggleTodoCompletion} />
+      <TodoFilter filterType={filterType} setFilterType={setFilterType} />
+      <TodoList
+        todos={showTodos}
+        toggleTodoCompletion={toggleTodoCompletion}
+        deleteTodo={deleteTodo}
+      />
     </div>
   );
 };

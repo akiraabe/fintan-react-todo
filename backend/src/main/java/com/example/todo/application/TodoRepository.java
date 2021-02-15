@@ -13,4 +13,10 @@ public interface TodoRepository {
     TodoId nextId();
 
     void add(UserId userId, Todo todo);
+
+    Todo get(TodoId todoId);
+
+    void update(UserId userId, Todo todo);
+
+    void remove(TodoId todoId);
 }

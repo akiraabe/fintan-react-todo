@@ -25,4 +25,19 @@ public class TodoService {
         todoRepository.add(userId, newTodo);
         return newTodo;
     }
+
+    public Todo updateStatus(UserId userId, TodoId todoId, TodoStatus status) {
+        Todo todo = todoRepository.get(todoId);
+        Todo changedTodo = todo.changeStatus(status);
+        todoRepository.update(userId, changedTodo);
+        return changedTodo;
+    }
+
+    public void removeTodo(TodoId todoId) {
+        todoRepository.remove(todoId);
+    }
+
+    public Todo getOne(TodoId todoId) {
+        return todoRepository.get(todoId);
+    }
 }

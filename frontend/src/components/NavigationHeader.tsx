@@ -1,16 +1,36 @@
-import React from 'react';
-import './NavigationHeader.css';
+import React from "react";
+import "./NavigationHeader.css";
+import { Link } from "react-router-dom";
+import { useUserContext } from "../contexts/UserContext";
 
 export const NavigationHeader: React.FC = () => {
-    return (
-        <header className="PageHeader_header">
-            <h1 className="PageHeader_title">Todoアプリ</h1>
-            <nav>
-                <ul className="PageHeader_nav">
-                    <li>テストユーザーさん</li>
-                    <li>ログアウト</li>
-                </ul>
-            </nav>
-        </header>
-    );
+  const userContext = useUserContext();
+  const logout = async () => {
+    await userContext.logout();
+    window.location.href = "/";
+  };
+
+  return (
+    <header className="PageHeader_header">
+      <h1 className="PageHeader_title">Todoアプリ</h1>
+      <nav>
+        <ul className="PageHeader_nav">
+          {userContext.isLoggedIn ? (
+            <>
+              <li>{userContext.userName}さん</li>
+              <li>
+                <button type="button" onClick={logout}>
+                  ログアウト
+                </button>
+              </li>
+            </>
+          ) : (
+            <li>
+              <Link to="/login">ログイン</Link>
+            </li>
+          )}
+        </ul>
+      </nav>
+    </header>
+  );
 };

@@ -10,10 +10,11 @@ type Todo = {
 
 type Props = {
   todos: Todo[],
-  toggleTodoCompletion: (id: number) => void
+  toggleTodoCompletion: (id: number) => void,
+  deleteTodo: (id: number) => void
 };
 
-export const TodoList: React.FC<Props> = ({ todos, toggleTodoCompletion }) => {
+export const TodoList: React.FC<Props> = ({ todos, toggleTodoCompletion, deleteTodo }) => {
   return (
     <ul className="TodoList_list">
       {todos.map((todo) => (
@@ -23,6 +24,7 @@ export const TodoList: React.FC<Props> = ({ todos, toggleTodoCompletion }) => {
           text={todo.text}
           completed={todo.completed}
           toggleTodoCompletion={toggleTodoCompletion}
+          deleteTodo={deleteTodo}
         />
       ))}
     </ul>

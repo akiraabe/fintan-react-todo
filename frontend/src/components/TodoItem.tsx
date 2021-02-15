@@ -6,6 +6,7 @@ type Props = {
   text: string;
   completed: boolean;
   toggleTodoCompletion: (id: number) => void;
+  deleteTodo: (id: number) => void;
 };
 
 export const TodoItem: React.FC<Props> = ({
@@ -13,6 +14,7 @@ export const TodoItem: React.FC<Props> = ({
   text,
   completed,
   toggleTodoCompletion,
+  deleteTodo,
 }) => {
   return (
     <li className="TodoItem_item">
@@ -28,7 +30,8 @@ export const TodoItem: React.FC<Props> = ({
         </label>
       </div>
       <div className="TodoItem_delete">
-        <button className="TodoItem_button">x</button>
+        <button className="TodoItem_button"
+        onClick={() => deleteTodo(id)}>x</button>
       </div>
     </li>
   );

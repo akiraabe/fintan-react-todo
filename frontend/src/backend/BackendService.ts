@@ -25,7 +25,7 @@ const corsHandler: Middleware = {
       init: {
         ...context.init,
         mode: "cors",
-        credentials: "include",
+        // credentials: "include",
       },
     };
   },
@@ -63,6 +63,10 @@ const putTodo = async (todoId: number, completed: boolean) => {
   return todosApi.putTodo({ todoId, inlineObject1: { completed } });
 };
 
+const deleteTodo = async (todoId: number) => {
+  return todosApi.deleteTodo({ todoId });
+};
+
 export const BackendService = {
   signup,
   login,
@@ -70,4 +74,5 @@ export const BackendService = {
   getTodos,
   postTodo,
   putTodo,
+  deleteTodo,
 };
