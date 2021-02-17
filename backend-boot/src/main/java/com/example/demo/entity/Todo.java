@@ -21,10 +21,10 @@ public class Todo {
     private Boolean completed;
     private String userId;
 
-    public Todo(String text) {
+    public Todo(String text, String userId) {
         this.text = text;
         this.completed = Boolean.FALSE;
-        this.userId = "1001"; //FIXME
+        this.userId = userId; //FIXME
     }
 
     public void changeStatus() {

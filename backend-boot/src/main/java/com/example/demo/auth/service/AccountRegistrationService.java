@@ -20,10 +20,19 @@ public class AccountRegistrationService {
     @Autowired
     UserProfileRepository userProfileRepository;
 
-    public void register(String userName, String password) {
+    public AccountRegistrationResult register(String userName, String password) {
+        if (existsAccount(userName)) {
+            return AccountRegistrationResult.NAME_CONFLICT;
+        }
         String userId = generateUserId();
         insertAccount(userId,password);
         insertUserProfile(userId, userName);
+        return AccountRegistrationResult.SUCCESS;
+    }
+
+    private boolean existsAccount(String userName) {
+        Iterable<UserProfileEntity> results = userProfileRepository.findByName(userName);
+        return results.iterator().hasNext();
     }
 
     private String generateUserId() {

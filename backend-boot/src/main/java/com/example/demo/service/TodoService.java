@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.auth.entity.UserProfileEntity;
+import com.example.demo.auth.repository.UserProfileRepository;
 import com.example.demo.entity.Todo;
 import com.example.demo.repository.TodoRepository;
 import org.springframework.stereotype.Service;
@@ -12,9 +14,11 @@ import java.util.List;
 public class TodoService {
 
     private final TodoRepository todoRepository;
+    private final UserProfileRepository userProfileRepository;
 
-    public TodoService(TodoRepository todoRepository) {
+    public TodoService(TodoRepository todoRepository, UserProfileRepository userProfileRepository) {
         this.todoRepository = todoRepository;
+        this.userProfileRepository = userProfileRepository;
     }
 
     public List<Todo> list(String userId) {
@@ -22,8 +26,9 @@ public class TodoService {
         return todos;
     }
 
-    public Todo addTodo(String text) {
-        Todo todo = new Todo(text);
+    public Todo addTodo(String text, String userId) {
+        Todo todo = new Todo(text, userId);
+
         todoRepository.save(todo);
         return todo;
     }
