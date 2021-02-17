@@ -22,8 +22,8 @@ import javax.servlet.http.HttpServletResponse;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    @Qualifier("UserDetailsServiceImpl")
-    private UserDetailsService userDetailsService;
+    //@Qualifier("UserDetailsServiceImpl")
+    private UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {

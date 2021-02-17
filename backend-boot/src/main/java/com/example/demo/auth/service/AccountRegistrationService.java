@@ -17,11 +17,6 @@ import java.util.UUID;
 @Transactional
 public class AccountRegistrationService {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     @Autowired
     AccountRepository accountRepository;
 
@@ -50,7 +45,7 @@ public class AccountRegistrationService {
     private void insertAccount(String userId, String password) {
         AccountEntity entity = new AccountEntity();
         entity.setUserId(userId);
-        entity.setPassword(passwordEncoder().encode(password));
+        entity.setPassword(password);
         accountRepository.save(entity);
     }
 
