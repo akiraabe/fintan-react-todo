@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.nio.channels.AcceptPendingException;
 
 @Service
+@Deprecated
 public class AuthenticationService {
 
     @Autowired

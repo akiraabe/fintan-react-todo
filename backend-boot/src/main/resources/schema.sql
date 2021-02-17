@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS account;
 CREATE TABLE account
 (
     user_id   VARCHAR(40) NOT NULL,
-    password  VARCHAR(20) NOT NULL,
+    password  VARCHAR(256) NOT NULL,
     PRIMARY KEY (user_id)
 );
 

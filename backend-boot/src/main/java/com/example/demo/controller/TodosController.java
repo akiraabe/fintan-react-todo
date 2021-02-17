@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
+import com.example.demo.auth.entity.AppUserDetails;
 import com.example.demo.entity.Todo;
 import com.example.demo.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,7 +28,8 @@ public class TodosController {
     @GetMapping
     @CrossOrigin
     //@CrossOrigin(origins = {"http://localhost:3000"})
-    public List<Todo> get() {
+    public List<Todo> get(@AuthenticationPrincipal AppUserDetails user) {
+        System.out.println("**** user -> " + user);
         System.out.println("**** " + userSession.getUserId());
         if (userSession.getUserId() == null) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "forbidden");

@@ -5,6 +5,9 @@ import com.example.demo.auth.entity.UserProfileEntity;
 import com.example.demo.auth.repository.AccountRepository;
 import com.example.demo.auth.repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -13,6 +16,11 @@ import java.util.UUID;
 @Service
 @Transactional
 public class AccountRegistrationService {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Autowired
     AccountRepository accountRepository;
@@ -42,7 +50,7 @@ public class AccountRegistrationService {
     private void insertAccount(String userId, String password) {
         AccountEntity entity = new AccountEntity();
         entity.setUserId(userId);
-        entity.setPassword(password);
+        entity.setPassword(passwordEncoder().encode(password));
         accountRepository.save(entity);
     }
 
