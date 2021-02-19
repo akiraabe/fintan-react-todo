@@ -10,7 +10,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.constraints.NotNull;
 
-//@RequestMapping("/")
 @RestController
 public class AuthController {
 

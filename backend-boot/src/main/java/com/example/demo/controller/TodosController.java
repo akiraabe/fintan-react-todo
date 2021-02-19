@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.auth.security.AppUserDetails;
-import com.example.demo.entity.Todo;
-import com.example.demo.service.TodoService;
+import com.example.demo.todo.entity.Todo;
+import com.example.demo.todo.service.TodoService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 

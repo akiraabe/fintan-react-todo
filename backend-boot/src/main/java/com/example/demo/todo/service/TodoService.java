@@ -1,9 +1,8 @@
-package com.example.demo.service;
+package com.example.demo.todo.service;
 
-import com.example.demo.auth.entity.UserProfileEntity;
 import com.example.demo.auth.repository.UserProfileRepository;
-import com.example.demo.entity.Todo;
-import com.example.demo.repository.TodoRepository;
+import com.example.demo.todo.entity.Todo;
+import com.example.demo.todo.repository.TodoRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

@@ -30,7 +30,7 @@ public class SimpleAuthenticationEntryPoint implements AuthenticationEntryPoint 
             return;
         }
         dump(exception);
-        response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        response.sendError(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.getReasonPhrase());
     }
 
     private void dump(AuthenticationException e) {

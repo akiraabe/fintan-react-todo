@@ -41,9 +41,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             // JSON用フィルターへの差し替え
             .addFilterAt(jsonAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            // CORS
-            .cors().configurationSource(corsConfigurationSource())
-            .and()
             // authorize
             .authorizeRequests()
                 .mvcMatchers("/api/login", "/api/signup")
@@ -96,7 +93,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-//        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
         return new BCryptPasswordEncoder();
     }
 
@@ -118,16 +114,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     LogoutSuccessHandler logoutSuccessHandler() {
         return new HttpStatusReturningLogoutSuccessHandler();
-    }
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        corsConfiguration.setAllowedMethods(Arrays.asList("GET","POST","OPTION","PUT","DELETE"));
-        //corsConfiguration.addAllowedHeader("Access-Control-Allow-Origin");
-        //corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", corsConfiguration);
-        return source;
     }
 }
 

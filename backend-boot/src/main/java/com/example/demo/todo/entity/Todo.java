@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.demo.todo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
