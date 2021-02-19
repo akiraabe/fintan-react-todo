@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.auth.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +24,7 @@ public class JsonAuthenticationFilter extends AbstractAuthenticationProcessingFi
     String passwordParameter; // = "password";
 
     public JsonAuthenticationFilter(AuthenticationManager authenticationManager) {
+        //super();
         super(new AntPathRequestMatcher("/api/login", "POST"));
         this.setAuthenticationManager(authenticationManager);
     }

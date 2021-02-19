@@ -25,7 +25,7 @@ const corsHandler: Middleware = {
       init: {
         ...context.init,
         mode: "cors",
-        // credentials: "include",
+        credentials: "include",
       },
     };
   },

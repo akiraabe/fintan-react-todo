@@ -1,4 +1,4 @@
-package com.example.demo.auth.entity;
+package com.example.demo.auth.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

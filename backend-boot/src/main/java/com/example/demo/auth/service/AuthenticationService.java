@@ -5,8 +5,6 @@ import com.example.demo.auth.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.nio.channels.AcceptPendingException;
-
 @Service
 @Deprecated
 public class AuthenticationService {

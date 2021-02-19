@@ -66,8 +66,6 @@
 
         <component class="nablarch.fw.jaxrs.JaxRsResponseHandler"/>
 
-        <component-ref name="threadContextHandler"/>
-
         <component-ref name="dbConnectionManagementHandler"/>
 
         <component-ref name="transactionManagementHandler"/>
@@ -87,6 +85,12 @@
         <component class="nablarch.fw.jaxrs.CorsPreflightRequestHandler">
           <property name="cors" ref="cors" />
         </component>
+
+        <component-ref name="sessionStoreHandler"/>
+
+        <component-ref name="threadContextHandler"/>
+
+        <component class="com.example.system.nablarch.handler.LoginCheckHandler" />
 
         <!-- パッケージマッピングでActionを呼び出すため最後に定義する -->
         <component-ref name="packageMapping"/>
@@ -111,6 +115,18 @@
         <component class="nablarch.core.repository.disposal.DisposableAdaptor">
           <property name="target" ref="dataSource" />
         </component>
+      </list>
+    </property>
+  </component>
+
+  <!-- SessionManagerの設定 -->
+  <import file="nablarch/webui/session-store.xml" />
+
+  <component name="sessionManager" class="nablarch.common.web.session.SessionManager">
+    <property name="defaultStoreName" value="${nablarch.sessionManager.defaultStoreName}" />
+    <property name="availableStores">
+      <list>
+        <component-ref name="httpSessionStore" />
       </list>
     </property>
   </component>

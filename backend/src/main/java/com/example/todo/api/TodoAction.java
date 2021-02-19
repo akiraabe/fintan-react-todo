@@ -3,6 +3,7 @@ package com.example.todo.api;
 import com.example.todo.application.TodoService;
 import com.example.todo.domain.*;
 import com.example.todo.infrastructure.entity.TodoEntity;
+import nablarch.core.ThreadContext;
 import nablarch.core.repository.di.config.externalize.annotation.SystemRepositoryComponent;
 import nablarch.core.validation.ee.ValidatorUtil;
 import nablarch.fw.ExecutionContext;
@@ -29,7 +30,8 @@ public class TodoAction {
     public TodoResponse put(HttpRequest request, ExecutionContext context, PutRequest requestBody) {
         ValidatorUtil.validate(requestBody);
 
-        UserId userId = new UserId("1002");
+        String userIdValue = ThreadContext.getUserId();
+        UserId userId = new UserId(userIdValue);
         TodoId todoId = new TodoId(Long.valueOf(request.getParam("todoId")[0]));
         TodoStatus status = requestBody.completed ? TodoStatus.COMPLETED : TodoStatus.INCOMPLETE;
 
@@ -40,13 +42,13 @@ public class TodoAction {
     }
 
     @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public TodoResponse delete(HttpRequest request, ExecutionContext context) {
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+    public void delete(HttpRequest request, ExecutionContext context) {
         TodoId todoId = new TodoId(Long.valueOf(request.getParam("todoId")[0]));
-        Todo todo = todoService.getOne(todoId);
+        // Todo todo = todoService.getOne(todoId);
         todoService.removeTodo(todoId);
-        return new TodoResponse(todo.id(), todo.text(), todo.status());
+        // return new TodoResponse(todo.id(), todo.text(), todo.status());
     }
 
 

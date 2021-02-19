@@ -3,6 +3,7 @@ package com.example.todo.api;
 import com.example.todo.application.TodoService;
 import com.example.todo.domain.*;
 import com.sun.istack.NotNull;
+import nablarch.core.ThreadContext;
 import nablarch.core.repository.di.config.externalize.annotation.SystemRepositoryComponent;
 import nablarch.core.validation.ee.ValidatorUtil;
 import nablarch.fw.web.post.PostRequest;
@@ -25,7 +26,8 @@ public class TodosAction {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<TodoResponse> get() {
-        UserId userId = new UserId("1001");
+        String userIdValue = ThreadContext.getUserId();
+        UserId userId = new UserId(userIdValue);
         List<Todo> todos = todoService.list(userId);
         return todos.stream()
                 .map(todo -> new TodoResponse(todo.id(), todo.text(), todo.status()))
@@ -38,7 +40,8 @@ public class TodosAction {
     public TodoResponse post(PostRequest requestBody) {
         ValidatorUtil.validate(requestBody);
 
-        UserId userId = new UserId("1002");
+        String userIdValue = ThreadContext.getUserId();
+        UserId userId = new UserId(userIdValue);
         TodoText text = new TodoText(requestBody.text);
         Todo todo = todoService.addTodo(userId, text);
         return new TodoResponse(todo.id(), todo.text(), todo.status());

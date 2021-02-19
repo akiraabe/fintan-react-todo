@@ -22,12 +22,13 @@ public class TodoService {
     }
 
     public List<Todo> list(String userId) {
-        List<Todo> todos = todoRepository.findByUserId(userId);
+        //List<Todo> todos = todoRepository.findByUserId(userId);
+        List<Todo> todos = todoRepository.findAll();
         return todos;
     }
 
-    public Todo addTodo(String text, String userId) {
-        Todo todo = new Todo(text, userId);
+    public Todo addTodo(String text) {
+        Todo todo = new Todo(text, "10001");
 
         todoRepository.save(todo);
         return todo;
