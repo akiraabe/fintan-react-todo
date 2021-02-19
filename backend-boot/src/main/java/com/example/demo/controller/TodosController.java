@@ -29,7 +29,7 @@ public class TodosController {
     @PostMapping
     @CrossOrigin(origins = {"http://localhost:300"})
     //@CrossOrigin(origins = {"http://localhost:3000"})
-    public Todo post(@RequestBody Todo todo) {
-        return todoService.addTodo(todo.getText());
+    public Todo post(@AuthenticationPrincipal AppUserDetails user, @RequestBody Todo todo) {
+        return todoService.addTodo(todo.getText(), user.getAppUserName());
     }
 }

@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .builder() //
                 .userId(userName) //
                 .password(accountEntity.getPassword()) //
-                .appUserName(userName + accountEntity.getUserId()) //
+                .appUserName(accountEntity.getUserId()) //
                 .build(); //
         return user;
     }

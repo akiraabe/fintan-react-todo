@@ -2,8 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.auth.service.AccountRegistrationResult;
 import com.example.demo.auth.service.AccountRegistrationService;
-import com.example.demo.auth.service.AuthenticationResult;
-import com.example.demo.auth.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,8 +17,8 @@ public class AuthController {
     @Autowired
     private AccountRegistrationService accountRegistrationService;
 
-    @Autowired
-    private AuthenticationService authenticationService;
+//    @Autowired
+//    private AuthenticationService authenticationService;
 
     @RequestMapping(value = "/api/signup", method = {RequestMethod.GET, RequestMethod.POST})
     @CrossOrigin
@@ -33,28 +31,28 @@ public class AuthController {
         }
     }
 
-    @PostMapping(value = "/api/login")
-    //@RequestMapping(value = "/api/login", method = {RequestMethod.GET, RequestMethod.PUT})
-    @CrossOrigin(origins = {"http://localhost:300"}, methods = RequestMethod.POST)
-    public void login(@RequestBody LoginRequest loginBody) {
-        String password = new BCryptPasswordEncoder().encode(loginBody.password);
-        AuthenticationResult result = authenticationService.authenticate(loginBody.userName, password);
-        if (result.isFailed()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "unauthorized");
-        }
-    }
+//    @PostMapping(value = "/api/login")
+//    //@RequestMapping(value = "/api/login", method = {RequestMethod.GET, RequestMethod.PUT})
+//    @CrossOrigin(origins = {"http://localhost:300"}, methods = RequestMethod.POST)
+//    public void login(@RequestBody LoginRequest loginBody) {
+//        String password = new BCryptPasswordEncoder().encode(loginBody.password);
+//        AuthenticationResult result = authenticationService.authenticate(loginBody.userName, password);
+//        if (result.isFailed()) {
+//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "unauthorized");
+//        }
+//    }
 //    @GetMapping(value = "/api/login")
 //    @CrossOrigin
 //    public String loginGet() {
 //        return "login";
 //    }
-
-    @PostMapping(value = "/api/logout")
-    @CrossOrigin
-    public void logout() {
-        return;
-    }
-
+//
+//    @PostMapping(value = "/api/logout")
+//    @CrossOrigin
+//    public void logout() {
+//        return;
+//    }
+//
     public static class SignupRequest {
         @NotNull
         public String userName;
@@ -62,11 +60,11 @@ public class AuthController {
         @NotNull
         public String password;
     }
-
-    public static class LoginRequest {
-        @NotNull
-        public String userName;
-        @NotNull
-        public String password;
-    }
+//
+//    public static class LoginRequest {
+//        @NotNull
+//        public String userName;
+//        @NotNull
+//        public String password;
+//    }
 }

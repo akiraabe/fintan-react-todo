@@ -16,6 +16,12 @@ public class TodoController {
         this.todoService = todoService;
     }
 
+    @GetMapping(value="/")
+    @CrossOrigin
+    public String index() {
+        return "index";
+    }
+
     @PutMapping(value= "/api/todos/{todoId}")
     @CrossOrigin(origins = {"http://localhost:300"}, methods = RequestMethod.PUT)
 //    @CrossOrigin(origins = {"http://localhost:3000"})
