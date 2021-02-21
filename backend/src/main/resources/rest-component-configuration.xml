@@ -54,6 +54,10 @@
     </property>
   </component>
 
+  <!-- CSRFハンドラ -->
+  <component name="csrfTokenVerificationHandler" class="nablarch.fw.web.handler.CsrfTokenVerificationHandler" />
+  <component name="csrfTokenEndpointHandler" class="com.example.system.nablarch.handler.csrf.CsrfTokenEndpointHandler" />
+
   <!-- ハンドラキュー構成 -->
   <component name="webFrontController" class="nablarch.fw.web.servlet.WebFrontController">
     <property name="handlerQueue">
@@ -84,6 +88,15 @@
         <!-- CORSハンドラ -->
         <component class="nablarch.fw.jaxrs.CorsPreflightRequestHandler">
           <property name="cors" ref="cors" />
+        </component>
+
+        <!-- CSRFトークン検証ハンドラ -->
+        <component-ref name="csrfTokenVerificationHandler"/>
+
+        <!-- CSRFトークン取得APIのエンドポイント -->
+        <component class="nablarch.fw.RequestHandlerEntry">
+          <property name="requestPattern" value="/api/csrf_token" />
+          <property name="handler" ref="csrfTokenEndpointHandler" />
         </component>
 
         <component-ref name="sessionStoreHandler"/>

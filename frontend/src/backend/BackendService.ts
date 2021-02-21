@@ -3,7 +3,46 @@ import {
   TodosApi,
   Middleware,
   UsersApi,
+  FetchParams,
+  HTTPMethod,
+  RequestContext,
 } from "./generated-rest-client";
+
+class CsrfTokenAttachment implements Middleware {
+
+  private readonly targetMethod: ReadonlyArray<HTTPMethod> = ['POST', 'PUT', 'DELETE', 'PATCH'];
+  private headerName = '';
+  private tokenValue = '';
+
+  setCsrfToken(headerName: string, tokenValue: string) {
+    console.log('setCsrfToken:', headerName, tokenValue);
+    this.headerName = headerName;
+    this.tokenValue = tokenValue;
+  }
+
+  pre = async (context: RequestContext): Promise<FetchParams | void> => {
+    if (!this.headerName || !this.targetMethod.includes(context.init.method as HTTPMethod)) {
+      return;
+    }
+    console.log('attach csrf token:', this.headerName, this.tokenValue);
+    return {
+      url: context.url,
+      init: {
+        ...context.init,
+        headers : {
+          ...context.init.headers,
+          [this.headerName]: this.tokenValue
+        }
+      }
+    };
+  }
+}
+
+const csrfTokenAttachment = new CsrfTokenAttachment();
+
+// const configuration = new Configuration({
+//   middleware: [csrfTokenAttachment, corsHandler, requestLogger]
+// });
 
 const requestLogger: Middleware = {
   pre: async (context) => {
@@ -32,7 +71,7 @@ const corsHandler: Middleware = {
 };
 
 const configuration = new Configuration({
-  middleware: [corsHandler, requestLogger],
+  middleware: [csrfTokenAttachment, corsHandler, requestLogger],
 });
 
 const todosApi = new TodosApi(configuration);
@@ -67,6 +106,11 @@ const deleteTodo = async (todoId: number) => {
   return todosApi.deleteTodo({ todoId });
 };
 
+const refreshCsrfToken = async () => {
+  const response = await usersApi.getCsrfToken();
+  csrfTokenAttachment.setCsrfToken(response.csrfTokenHeaderName, response.csrfTokenValue);
+};
+
 export const BackendService = {
   signup,
   login,
@@ -75,4 +119,5 @@ export const BackendService = {
   postTodo,
   putTodo,
   deleteTodo,
+  refreshCsrfToken
 };

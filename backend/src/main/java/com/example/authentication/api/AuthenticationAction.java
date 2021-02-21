@@ -55,7 +55,7 @@ public class AuthenticationAction {
             throw new HttpErrorResponse(HttpResponse.Status.UNAUTHORIZED.getStatusCode());
         }
         SessionUtil.invalidate(executionContext);
-        SessionUtil.put(executionContext, "user.id", "test");//result.userId());
+        SessionUtil.put(executionContext, "user.id", result.userId());
     }
 
     @Path("/logout")

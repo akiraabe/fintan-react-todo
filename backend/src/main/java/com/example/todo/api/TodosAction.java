@@ -28,6 +28,7 @@ public class TodosAction {
     public List<TodoResponse> get() {
         String userIdValue = ThreadContext.getUserId();
         UserId userId = new UserId(userIdValue);
+        System.out.println("get userId --> " + userId.value());
         List<Todo> todos = todoService.list(userId);
         return todos.stream()
                 .map(todo -> new TodoResponse(todo.id(), todo.text(), todo.status()))

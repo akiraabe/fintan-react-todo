@@ -22,8 +22,8 @@ public class LoginCheckHandler implements Handler<HttpRequest, Object> {
     public LoginCheckHandler() {
         whitePatterns
                 .add("/api/signup", HttpMethod.POST)
-                .add("/api/login", HttpMethod.POST);
-//                .add("/api/csrf_token", HttpMethod.GET);
+                .add("/api/login", HttpMethod.POST)
+                .add("/api/csrf_token", HttpMethod.GET);
     }
 
     @Override

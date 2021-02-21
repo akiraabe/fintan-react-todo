@@ -11,6 +11,7 @@ public class TodoEntity {
     private Long todoId;
     private String text;
     private Boolean completed;
+    @Column(name = "user_id")
     private String userId;
 
     public Long getTodoId() {

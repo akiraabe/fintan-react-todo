@@ -24,7 +24,7 @@ public class Todo {
     public Todo(String text, String userId) {
         this.text = text;
         this.completed = Boolean.FALSE;
-        this.userId = userId; //FIXME
+        this.userId = userId;
     }
 
     public void changeStatus() {

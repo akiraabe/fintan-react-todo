@@ -1,5 +1,9 @@
 package com.example.todo;
 
+import com.example.openapi.OpenApiValidator;
+import com.jayway.jsonpath.JsonPath;
+import nablarch.common.web.WebConfig;
+import nablarch.common.web.WebConfigFinder;
 import nablarch.common.web.session.SessionUtil;
 import nablarch.fw.ExecutionContext;
 import nablarch.fw.web.HttpResponse;
@@ -7,22 +11,23 @@ import nablarch.fw.web.RestMockHttpRequest;
 import nablarch.test.core.http.SimpleRestTestSupport;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.openapi4j.core.validation.ValidationException;
 
 import javax.ws.rs.core.MediaType;
-
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Map;
 
-import static com.example.authentication.AuthenticationRestApiTest.openApiValidator;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
 public class RestApiTest extends SimpleRestTestSupport {
-//    public static OpenApiValidator openApiValidator = new OpenApiValidator(Paths.get("rest-api-specification/openapi.yaml"));
+    private static OpenApiValidator openApiValidator = new OpenApiValidator(Paths.get("rest-api-specification/openapi.yaml"));
+
     @Test
-    public void RestApiでToDo一覧が取得できる() {
+    public void RestApiでToDo一覧が取得できる() throws ValidationException {
         ExecutionContext executionContext = new ExecutionContext();
         SessionUtil.put(executionContext, "user.id", "1001");
 
@@ -42,6 +47,9 @@ public class RestApiTest extends SimpleRestTestSupport {
         assertThat(responseBody, hasJsonPath("$[1].id", equalTo(2002)));
         assertThat(responseBody, hasJsonPath("$[1].text", equalTo("やるべきこと２")));
         assertThat(responseBody, hasJsonPath("$[1].completed", equalTo(false)));
+
+        openApiValidator.validate("getTodos", request, response);
+
     }
 
     @Test
@@ -51,7 +59,7 @@ public class RestApiTest extends SimpleRestTestSupport {
 
         RestMockHttpRequest request = post("/api/todos")
                 .setHeader("Content-Type", MediaType.APPLICATION_JSON)
-                .setBody(Map.of("text","テストする"));
+                .setBody(Map.of("text", "テストする"));
         HttpResponse response = sendRequestWithContext(request, executionContext);
 
         assertStatusCode("ToDoの登録", HttpResponse.Status.OK, response);
@@ -76,6 +84,7 @@ public class RestApiTest extends SimpleRestTestSupport {
         //assertStatusCode("ToDoの登録", HttpResponse.Status.BAD_REQUEST, response);
         assertStatusCode("ToDoの登録", HttpResponse.Status.valueOfCode(500), response);
     }
+
     @Test
     public void RESTAPIでToDoの状態を更新できる() throws Exception {
         ExecutionContext executionContext = new ExecutionContext();
@@ -93,5 +102,25 @@ public class RestApiTest extends SimpleRestTestSupport {
         assertThat(response.getBodyString(), hasJsonPath("$.completed", equalTo(true)));
 
         openApiValidator.validate("putTodo", request, response);
+    }
+
+    private void attachCsrfToken(RestMockHttpRequest request, ExecutionContext context) {
+        HttpResponse response = sendRequest(get("/api/csrf_token"));
+        assertStatusCode("CSRFトークンの取得", HttpResponse.Status.OK, response);
+
+        String json = response.getBodyString();
+        String name = JsonPath.read(json, "$.csrfTokenHeaderName");
+        String value = JsonPath.read(json, "$.csrfTokenValue");
+
+        request.setHeader(name, value);
+
+        WebConfig webConfig = WebConfigFinder.getWebConfig();
+        String storedVarName = webConfig.getCsrfTokenSessionStoredVarName();
+        String storeName = webConfig.getCsrfTokenSavedStoreName();
+        if (storeName != null) {
+            SessionUtil.put(context, storedVarName, value, storeName);
+        } else {
+            SessionUtil.put(context, storedVarName, value);
+        }
     }
 }
