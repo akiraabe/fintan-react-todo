@@ -19,16 +19,13 @@ public class TodosController {
     }
 
     @GetMapping
-    @CrossOrigin
-    //@CrossOrigin(origins = {"http://localhost:3000"})
+    @CrossOrigin(origins = {"http://localhost:3000"})
     public List<Todo> get(@AuthenticationPrincipal AppUserDetails user) {
-        System.out.println("**** user -> " + user);
         return todoService.list(user.getAppUserName());
     }
 
     @PostMapping
     @CrossOrigin(origins = {"http://localhost:300"})
-    //@CrossOrigin(origins = {"http://localhost:3000"})
     public Todo post(@AuthenticationPrincipal AppUserDetails user, @RequestBody Todo todo) {
         return todoService.addTodo(todo.getText(), user.getAppUserName());
     }

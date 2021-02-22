@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <component-configuration
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://tis.co.jp/nablarch/component-configuration"
-    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  https://nablarch.github.io/schema/component-configuration.xsd">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://tis.co.jp/nablarch/component-configuration"
+        xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  https://nablarch.github.io/schema/component-configuration.xsd">
 
   <!-- 環境設定ファイル -->
   <config-file file="common.config" />
@@ -19,14 +19,14 @@
   <component name="packageMapping" class="nablarch.integration.router.PathOptionsProviderRoutesMapping">
     <property name="pathOptionsProvider">
       <component class="nablarch.integration.router.jaxrs.JaxRsPathOptionsProvider">
-        <property name="applicationPath" value="${nablarch.webApi.applicationPath}"/>
-        <property name="basePackage" value="${nablarch.commonProperty.basePackage}"/>
+        <property name="applicationPath" value="${nablarch.webApi.applicationPath}" />
+        <property name="basePackage" value="${nablarch.commonProperty.basePackage}" />
       </component>
     </property>
     <property name="methodBinderFactory">
       <component class="nablarch.fw.jaxrs.JaxRsMethodBinderFactory">
         <property name="handlerList">
-          <component class="nablarch.integration.jaxrs.jersey.JerseyJaxRsHandlerListFactory"/>
+          <component class="nablarch.integration.jaxrs.jersey.JerseyJaxRsHandlerListFactory" />
         </property>
       </component>
     </property>
@@ -45,6 +45,23 @@
     <property name="cleanBeforeMigrate" value="${flyway.cleanBeforeMigrate}"/>
   </component>
 
+  <!-- セッションストア機能 -->
+  <import file="nablarch/webui/session-store.xml" />
+
+  <component name="sessionManager" class="nablarch.common.web.session.SessionManager">
+    <property name="defaultStoreName" value="${nablarch.sessionManager.defaultStoreName}" />
+    <property name="availableStores">
+      <list>
+        <!-- HTTPセッション上に保存するセッションストア -->
+        <component-ref name="httpSessionStore" />
+      </list>
+    </property>
+  </component>
+
+  <!-- CSRFハンドラ -->
+  <component name="csrfTokenVerificationHandler" class="nablarch.fw.web.handler.CsrfTokenVerificationHandler" />
+  <component name="csrfTokenEndpointHandler" class="com.example.system.nablarch.handler.csrf.CsrfTokenEndpointHandler" />
+
   <!-- CORS設定 -->
   <component name="cors" class="nablarch.fw.jaxrs.cors.BasicCors">
     <property name="allowOrigins">
@@ -53,10 +70,6 @@
       </component>
     </property>
   </component>
-
-  <!-- CSRFハンドラ -->
-  <component name="csrfTokenVerificationHandler" class="nablarch.fw.web.handler.CsrfTokenVerificationHandler" />
-  <component name="csrfTokenEndpointHandler" class="com.example.system.nablarch.handler.csrf.CsrfTokenEndpointHandler" />
 
   <!-- ハンドラキュー構成 -->
   <component name="webFrontController" class="nablarch.fw.web.servlet.WebFrontController">
@@ -68,12 +81,6 @@
 
         <component class="nablarch.common.handler.threadcontext.ThreadContextClearHandler"/>
 
-        <component class="nablarch.fw.jaxrs.JaxRsResponseHandler"/>
-
-        <component-ref name="dbConnectionManagementHandler"/>
-
-        <component-ref name="transactionManagementHandler"/>
-
         <component class="nablarch.fw.jaxrs.JaxRsResponseHandler">
           <property name="responseFinishers">
             <list>
@@ -84,6 +91,10 @@
             </list>
           </property>
         </component>
+
+        <component-ref name="sessionStoreHandler" />
+
+        <component-ref name="threadContextHandler"/>
 
         <!-- CORSハンドラ -->
         <component class="nablarch.fw.jaxrs.CorsPreflightRequestHandler">
@@ -99,11 +110,11 @@
           <property name="handler" ref="csrfTokenEndpointHandler" />
         </component>
 
-        <component-ref name="sessionStoreHandler"/>
+        <component-ref name="dbConnectionManagementHandler"/>
 
-        <component-ref name="threadContextHandler"/>
+        <component-ref name="transactionManagementHandler"/>
 
-        <component class="com.example.system.nablarch.handler.LoginCheckHandler" />
+        <component class="com.example.system.nablarch.handler.LoginCheckHandler"/>
 
         <!-- パッケージマッピングでActionを呼び出すため最後に定義する -->
         <component-ref name="packageMapping"/>
@@ -128,18 +139,6 @@
         <component class="nablarch.core.repository.disposal.DisposableAdaptor">
           <property name="target" ref="dataSource" />
         </component>
-      </list>
-    </property>
-  </component>
-
-  <!-- SessionManagerの設定 -->
-  <import file="nablarch/webui/session-store.xml" />
-
-  <component name="sessionManager" class="nablarch.common.web.session.SessionManager">
-    <property name="defaultStoreName" value="${nablarch.sessionManager.defaultStoreName}" />
-    <property name="availableStores">
-      <list>
-        <component-ref name="httpSessionStore" />
       </list>
     </property>
   </component>

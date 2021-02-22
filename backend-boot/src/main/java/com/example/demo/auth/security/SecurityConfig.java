@@ -19,6 +19,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -43,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilterAt(jsonAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             // authorize
             .authorizeRequests()
-                .mvcMatchers("/api/login", "/api/signup")
+                .mvcMatchers("/api/login", "/api/signup","/api/csrf_token")
                     .permitAll()
                 .anyRequest()
                     .authenticated()
@@ -70,9 +73,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             // CSRF
             .csrf()
-                .disable()
-//                .csrfTokenRepository(new CookieCsrfTokenRepository())
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
             // Session
+            .and()
             .sessionManagement()
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(false)

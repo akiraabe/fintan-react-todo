@@ -28,7 +28,7 @@ public class AuthenticationRestApiTest extends SimpleRestTestSupport {
                         "userName", "signup-test",
                         "password", "pass"));
         attachCsrfToken(request, executionContext);
-        HttpResponse response = sendRequest(request);
+        HttpResponse response = sendRequestWithContext(request, executionContext);
 
         assertStatusCode("サインアップ", HttpResponse.Status.NO_CONTENT, response);
 
@@ -44,7 +44,7 @@ public class AuthenticationRestApiTest extends SimpleRestTestSupport {
                         "userName", "signup-conflict-test",
                         "password", "pass"));
         attachCsrfToken(firstRequest, executionContext);
-        sendRequest(firstRequest);
+        sendRequestWithContext(firstRequest, executionContext);
 
         RestMockHttpRequest secondRequest = post("/api/signup")
                 .setHeader("Content-Type", MediaType.APPLICATION_JSON)
@@ -52,7 +52,7 @@ public class AuthenticationRestApiTest extends SimpleRestTestSupport {
                         "userName", "signup-conflict-test",
                         "password", "pass"));
         attachCsrfToken(secondRequest, executionContext);
-        HttpResponse response = sendRequest(secondRequest);
+        HttpResponse response = sendRequestWithContext(secondRequest, executionContext);
 
         assertStatusCode("サインアップ", HttpResponse.Status.CONFLICT, response);
 
@@ -68,7 +68,7 @@ public class AuthenticationRestApiTest extends SimpleRestTestSupport {
                         "userName", "login-test",
                         "password", "pass"));
         attachCsrfToken(request, executionContext);
-        HttpResponse response = sendRequest(request);
+        HttpResponse response = sendRequestWithContext(request, executionContext);
 
         assertStatusCode("ログイン", HttpResponse.Status.NO_CONTENT, response);
 
@@ -84,7 +84,7 @@ public class AuthenticationRestApiTest extends SimpleRestTestSupport {
                         "userName", "login-test",
                         "password", "fail"));
         attachCsrfToken(request, executionContext);
-        HttpResponse response = sendRequest(request);
+        HttpResponse response = sendRequestWithContext(request, executionContext);
 
         assertStatusCode("ログイン", HttpResponse.Status.UNAUTHORIZED, response);
 
@@ -100,7 +100,7 @@ public class AuthenticationRestApiTest extends SimpleRestTestSupport {
                         "userName", "fail-test",
                         "password", "pass"));
         attachCsrfToken(request, executionContext);
-        HttpResponse response = sendRequest(request);
+        HttpResponse response = sendRequestWithContext(request, executionContext);
 
         assertStatusCode("ログイン", HttpResponse.Status.UNAUTHORIZED, response);
 

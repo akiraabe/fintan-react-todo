@@ -5,10 +5,14 @@ import com.example.demo.auth.service.AccountRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.csrf.DefaultCsrfToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class AuthController {
@@ -16,12 +20,22 @@ public class AuthController {
     @Autowired
     private AccountRegistrationService accountRegistrationService;
 
-//    @Autowired
-//    private AuthenticationService authenticationService;
+    @GetMapping(value = "/api/csrf_token")
+    @CrossOrigin
+    public Map<String,String> getCsrf(HttpServletRequest request) {
+        Map<String, String> result = new HashMap<>();
+        result.put("csrfTokenParameterName", "csrf-token");
+        result.put("csrfTokenHeaderName", "X-XSRF-TOKEN");
+        DefaultCsrfToken token = (DefaultCsrfToken) request.getAttribute("_csrf");
+        result.put("csrfTokenValue", token.getToken());
+
+        return result;
+    }
 
     @RequestMapping(value = "/api/signup", method = {RequestMethod.GET, RequestMethod.POST})
     @CrossOrigin
     public void signup(@RequestBody SignupRequest requestBody) {
+        System.out.println("signup is called");
         //ValidatorUtil.validate(requestBody);
         String password = new BCryptPasswordEncoder().encode(requestBody.password);
         AccountRegistrationResult result = accountRegistrationService.register(requestBody.userName, password);
@@ -30,28 +44,6 @@ public class AuthController {
         }
     }
 
-//    @PostMapping(value = "/api/login")
-//    //@RequestMapping(value = "/api/login", method = {RequestMethod.GET, RequestMethod.PUT})
-//    @CrossOrigin(origins = {"http://localhost:300"}, methods = RequestMethod.POST)
-//    public void login(@RequestBody LoginRequest loginBody) {
-//        String password = new BCryptPasswordEncoder().encode(loginBody.password);
-//        AuthenticationResult result = authenticationService.authenticate(loginBody.userName, password);
-//        if (result.isFailed()) {
-//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "unauthorized");
-//        }
-//    }
-//    @GetMapping(value = "/api/login")
-//    @CrossOrigin
-//    public String loginGet() {
-//        return "login";
-//    }
-//
-//    @PostMapping(value = "/api/logout")
-//    @CrossOrigin
-//    public void logout() {
-//        return;
-//    }
-//
     public static class SignupRequest {
         @NotNull
         public String userName;
@@ -59,11 +51,4 @@ public class AuthController {
         @NotNull
         public String password;
     }
-//
-//    public static class LoginRequest {
-//        @NotNull
-//        public String userName;
-//        @NotNull
-//        public String password;
-//    }
 }
